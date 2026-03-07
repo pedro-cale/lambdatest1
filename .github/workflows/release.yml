@@ -6,6 +6,9 @@ on:
 
 jobs:
   deploy:
+    permissions:
+      id-token: write
+      contents: read
 
     uses: pedro-cale/PedroCalvo-Envioclick-Challenge/.github/workflows/lambda_deployer.yml@main
 
