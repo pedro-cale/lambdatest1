@@ -7,7 +7,6 @@ Parameters:
   JobName:
     Description: Job Name
     Type: String
-    Default: case1-and-2-lambda
   CodeVersion:
     Description: Code Version
     Type: String
