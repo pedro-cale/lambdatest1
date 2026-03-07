@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: The following stack shows cases 1 and 2 of the Envioclick challenge. 
+Parameters:
+  Env:
+    Description: Environment Name
+    Type: String
+  JobName:
+    Description: Job Name
+    Type: String
+    Default: case1-and-2-lambda
+  CodeVersion:
+    Description: Code Version
+    Type: String
+  Handler:
+    Type: String
+    Description: Handler method for function.
+    Default: lambda.lambda_handler
+  MemorySize:
+    Type: Number
+    Description: MemorySize
+    Default: 128
+    MinValue: 128
+    MaxValue: 1024
+  Timeout:
+    Type: String
+    Description: Timeout value in seconds.
+    Default: '60'
+
+Resources:
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+
+  BasicLambdaPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: !Sub ${JobName}-${Env}-basic-lambda-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: "logs:CreateLogGroup"
+            Resource: "arn:aws:logs:*:*:*"
+          - Effect: Allow
+            Action:
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+            Resource:
+              - !Sub 'arn:aws:logs:*:*:log-group:/aws/lambda/${JobName}-${Env}:*'
+      Roles:
+        - !Ref LambdaRole
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.13
+      Architectures:
+        - arm64
+      Description: !Sub "Lambda deployed for ${Env} version ${CodeVersion}"
+      Role: !GetAtt
+        - LambdaRole
+        - Arn
+      Handler: !Ref Handler
+      Code:
+        S3Bucket: ec-lambdas-bucket
+        S3Key: !Sub ${Env}/${JobName}-${CodeVersion}.zip
+      Description: 'ec-lambda-function'
+      FunctionName: !Sub ${JobName}-${Env}
+      Timeout: !Ref Timeout
+      Environment:
+        Variables:
+          Env: !Sub ${Env}
+          JobName: !Sub ${JobName}
+      Tags:
+        - Key: CodeVersion
+          Value: !Sub ${CodeVersion}

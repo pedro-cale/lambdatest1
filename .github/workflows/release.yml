@@ -1,0 +1,15 @@
+name: Version Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+
+    uses: pedro-cale/PedroCalvo-Envioclick-Challenge/.github/workflows/lambda_deployer.yml@main
+
+    with:
+      component_name: lambdatest1
+      version: ${{ github.ref_name }}
+      environment: dev
