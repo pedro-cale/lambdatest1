@@ -9,7 +9,7 @@ on:
         type: choice
         options:
           - dev
-          - stag
+          - staging
           - prod
       version:
         description: "Version to deploy and release"
