@@ -23,7 +23,7 @@ jobs:
     with:
       component_name: lambdatest1
       version: ${{ inputs.version }}
-      environment: ${{ inputs.environment }}
+      env: ${{ inputs.environment }}
 
     permissions:
       id-token: write
