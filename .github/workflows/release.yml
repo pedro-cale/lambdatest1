@@ -8,9 +8,9 @@ on:
         required: true
         type: choice
         options:
-          - dev
-          - staging
-          - prod
+          - Development
+          - Staging
+          - Production
       version:
         description: "Version to deploy and release"
         required: true
