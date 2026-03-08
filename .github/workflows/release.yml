@@ -18,6 +18,7 @@ on:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment: ${{ inputs.environment == 'prod' && 'Production' || inputs.environment == 'staging' && 'Staging' || inputs.environment == 'dev' && 'Development' }}
     permissions:
       id-token: write
@@ -29,7 +30,7 @@ jobs:
       component_name: lambdatest1
       version: ${{ inputs.version }}
       environment: ${{ inputs.environment }}
-      
+
   create-release:
     needs: deploy
     runs-on: ubuntu-latest
