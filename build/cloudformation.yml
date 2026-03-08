@@ -7,7 +7,6 @@ Parameters:
   JobName:
     Description: Job Name
     Type: String
-    Default: lambda1test1
   CodeVersion:
     Description: Code Version
     Type: String

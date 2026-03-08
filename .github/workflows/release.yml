@@ -1,4 +1,4 @@
-name: Version Release
+name: Release
 
 on:
   workflow_dispatch:
@@ -35,6 +35,9 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Create release
         run: gh release create ${{ inputs.version }} --generate-notes
         env:
