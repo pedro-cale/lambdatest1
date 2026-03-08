@@ -1,4 +1,4 @@
-name: Release
+name: Deploy and Release
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ on:
         type: string
 
 jobs:
-  deploy:
+  Deploy:
     uses: pedro-cale/PedroCalvo-Envioclick-Challenge/.github/workflows/lambda_deployer.yml@main
 
     with:
@@ -29,7 +29,7 @@ jobs:
       id-token: write
       contents: write
 
-  create-release:
+  Release:
     needs: deploy
     runs-on: ubuntu-latest
     permissions:
@@ -38,7 +38,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Create release
-        run: gh release create ${{ inputs.version }} --generate-notes
+      - name: Create release if missing
+        run: |
+          if gh release view "${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "Release ${{ inputs.version }} already exists; skipping creation."
+          else
+            gh release create "${{ inputs.version }}" --generate-notes
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
