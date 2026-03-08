@@ -25,7 +25,6 @@ jobs:
       version: ${{ inputs.version }}
       environment: ${{ inputs.environment }}
 
-    environment: ${{ inputs.environment == 'prod' && 'Production' || inputs.environment == 'staging' && 'Staging' || inputs.environment == 'dev' && 'Development' }}
     permissions:
       id-token: write
       contents: write
