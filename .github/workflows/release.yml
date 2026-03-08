@@ -17,20 +17,7 @@ on:
         type: string
 
 jobs:
-  Deploy:
-    uses: pedro-cale/PedroCalvo-Envioclick-Challenge/.github/workflows/lambda_deployer.yml@main
-
-    with:
-      component_name: lambdatest1
-      version: ${{ inputs.version }}
-      env: ${{ inputs.environment }}
-
-    permissions:
-      id-token: write
-      contents: write
-
   Release:
-    needs: deploy
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -47,3 +34,16 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  Deploy:
+    needs: Release
+    uses: pedro-cale/PedroCalvo-Envioclick-Challenge/.github/workflows/lambda_deployer.yml@main
+
+    with:
+      component_name: lambdatest1
+      version: ${{ inputs.version }}
+      env: ${{ inputs.environment }}
+
+    permissions:
+      id-token: write
+      contents: write
