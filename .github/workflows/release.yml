@@ -18,7 +18,6 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
     environment: ${{ inputs.environment == 'prod' && 'Production' || inputs.environment == 'staging' && 'Staging' || inputs.environment == 'dev' && 'Development' }}
     permissions:
       id-token: write
