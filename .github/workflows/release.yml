@@ -1,18 +1,42 @@
 name: Version Release
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      version:
+        description: "Version to deploy and release"
+        required: true
+        type: string
 
 jobs:
   deploy:
+    environment: ${{ inputs.environment == 'prod' && 'Production' || inputs.environment == 'staging' && 'Staging' || inputs.environment == 'dev' && 'Development' }}
     permissions:
       id-token: write
-      contents: read
+      contents: write
 
     uses: pedro-cale/PedroCalvo-Envioclick-Challenge/.github/workflows/lambda_deployer.yml@main
 
     with:
       component_name: lambdatest1
-      version: ${{ github.ref_name }}
-      environment: dev
+      version: ${{ inputs.version }}
+      environment: ${{ inputs.environment }}
+      
+  create-release:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create release
+        run: gh release create ${{ inputs.version }} --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
