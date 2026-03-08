@@ -18,17 +18,17 @@ on:
 
 jobs:
   deploy:
-    environment: ${{ inputs.environment == 'prod' && 'Production' || inputs.environment == 'staging' && 'Staging' || inputs.environment == 'dev' && 'Development' }}
-    permissions:
-      id-token: write
-      contents: write
-
     uses: pedro-cale/PedroCalvo-Envioclick-Challenge/.github/workflows/lambda_deployer.yml@main
 
     with:
       component_name: lambdatest1
       version: ${{ inputs.version }}
       environment: ${{ inputs.environment }}
+
+    environment: ${{ inputs.environment == 'prod' && 'Production' || inputs.environment == 'staging' && 'Staging' || inputs.environment == 'dev' && 'Development' }}
+    permissions:
+      id-token: write
+      contents: write
 
   create-release:
     needs: deploy
